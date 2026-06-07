@@ -1,0 +1,156 @@
+{
+  "info": {
+    "name": "Do Auto Review System",
+    "description": "WhatsApp + Google Review Automation API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Test 1: Malabar Gold - Abdul Rahman",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"customer_name\": \"Abdul Rahman\",\n    \"customer_phone\": \"9744112233\",\n    \"shop_name\": \"Malabar Gold & Diamonds\",\n    \"bill_number\": \"MGD001\",\n    \"amount\": 85000.00\n}"
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/receive-bill/",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["api", "receive-bill/"]
+        }
+      }
+    },
+    {
+      "name": "Test 2: Kalyan Jewellers - Lakshmi Nair",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"customer_name\": \"Lakshmi Nair\",\n    \"customer_phone\": \"9744223344\",\n    \"shop_name\": \"Kalyan Jewellers\",\n    \"bill_number\": \"KJN002\",\n    \"amount\": 125000.00\n}"
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/receive-bill/"
+        }
+      }
+    },
+    {
+      "name": "Test 3: Bhima Jewellery - Sreedharan Pillai",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"customer_name\": \"Sreedharan Pillai\",\n    \"customer_phone\": \"9744334455\",\n    \"shop_name\": \"Bhima Jewellery\",\n    \"bill_number\": \"BHJ003\",\n    \"amount\": 45000.00\n}"
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/receive-bill/"
+        }
+      }
+    },
+    {
+      "name": "Test 4: Alukkas - Fathima Begum",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"customer_name\": \"Fathima Begum\",\n    \"customer_phone\": \"9744445566\",\n    \"shop_name\": \"Alukkas Group\",\n    \"bill_number\": \"ALK004\",\n    \"amount\": 28000.00\n}"
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/receive-bill/"
+        }
+      }
+    },
+    {
+      "name": "Test 5: Joyalukkas - Varghese Mathew",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"customer_name\": \"Varghese Mathew\",\n    \"customer_phone\": \"9744556677\",\n    \"shop_name\": \"Joyalukkas\",\n    \"bill_number\": \"JYK005\",\n    \"amount\": 95000.00\n}"
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/receive-bill/"
+        }
+      }
+    },
+    {
+      "name": "Test 6: Duplicate Prevention (Same Customer)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"customer_name\": \"Abdul Rahman\",\n    \"customer_phone\": \"9744112233\",\n    \"shop_name\": \"Malabar Gold & Diamonds\",\n    \"bill_number\": \"MGD006\",\n    \"amount\": 5000.00\n}"
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/receive-bill/"
+        }
+      }
+    },
+    {
+      "name": "Test 7: Error - Missing Fields",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"customer_name\": \"Test Only\",\n    \"customer_phone\": \"9999999999\"\n}"
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/receive-bill/"
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    },
+    {
+      "key": "api_endpoint",
+      "value": "/api/receive-bill/"
+    }
+  ]
+}
