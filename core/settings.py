@@ -27,6 +27,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 
 # Application definition
 
@@ -129,3 +133,16 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 WHATSAPP_TOKEN = 'your-whatsapp-access-token'
 WHATSAPP_PHONE_NUMBER_ID = 'your-phone-number-id'
 WHATSAPP_BUSINESS_ACCOUNT_ID = 'your-business-account-id'
+
+
+
+
+
+# Messages settings
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.ERROR: 'error',
+    messages.SUCCESS: 'success',
+    messages.INFO: 'info',
+    messages.WARNING: 'warning',
+}

@@ -1,0 +1,559 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Director | Do Auto Review</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at 10% 20%, #f5f0ff, #ede9fe);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            padding: 36px 44px;
+            min-height: 100vh;
+        }
+
+        /* floating decoration */
+        body::after {
+            content: "🏪";
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-size: 100px;
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Header area */
+        .shop-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 36px;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .brand-intro h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(145deg, #5b21b6, #7c3aed, #a78bfa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-intro h1 i {
+            background: linear-gradient(135deg, #7c3aed, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .brand-intro p {
+            color: #5b4b8c;
+            font-weight: 500;
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+        }
+
+        .stats-glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border-radius: 60px;
+            padding: 8px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid rgba(124, 58, 237, 0.25);
+        }
+
+        .stats-glass span:first-child {
+            font-weight: 500;
+            color: #4a3b77;
+        }
+
+        .stats-glass .total-num {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6d28d9, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .add-shop-btn {
+            background: linear-gradient(145deg, #10b981, #059669);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 60px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.25s ease;
+            box-shadow: 0 6px 14px -6px rgba(16,185,129,0.4);
+        }
+
+        .add-shop-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.02);
+        }
+
+        /* main card */
+        .shop-directory {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 48px;
+            box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        /* filter bar */
+        .filter-section {
+            padding: 20px 28px;
+            background: #ffffff;
+            border-bottom: 1px solid #ede9fe;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        .search-shop {
+            display: flex;
+            align-items: center;
+            background: #f9f6ff;
+            border-radius: 80px;
+            padding: 8px 24px;
+            gap: 12px;
+            border: 1px solid #e9e4ff;
+        }
+
+        .search-shop i {
+            color: #8b7acb;
+        }
+
+        .search-shop input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 260px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.85rem;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 8px;
+            background: #f1ecfe;
+            padding: 5px;
+            border-radius: 60px;
+        }
+
+        .toggle-option {
+            padding: 6px 20px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #5b4b8c;
+        }
+
+        .toggle-option.active {
+            background: white;
+            color: #7c3aed;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        /* Table styling */
+        .table-studio {
+            overflow-x: auto;
+        }
+
+        .shop-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .shop-table th {
+            padding: 18px 24px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #6b5b9e;
+            background: #fefcff;
+            border-bottom: 1px solid #ede9fe;
+        }
+
+        .shop-table td {
+            padding: 18px 24px;
+            border-bottom: 1px solid #f5f2ff;
+            transition: background 0.2s;
+        }
+
+        .shop-table tr:hover td {
+            background: #fbf9ff;
+        }
+
+        /* shop cell */
+        .shop-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .shop-icon-badge {
+            width: 54px;
+            height: 54px;
+            background: linear-gradient(145deg, #f3e8ff, #e9d9ff);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.7rem;
+            color: #7c3aed;
+        }
+
+        .shop-details .shop-title {
+            font-weight: 800;
+            color: #1f1a3e;
+            margin-bottom: 4px;
+        }
+
+        .shop-details .shop-id-text {
+            font-size: 0.65rem;
+            color: #8b7aab;
+        }
+
+        /* whatsapp modern */
+        .wa-modern {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #eafaf1;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #0b5e2e;
+        }
+
+        /* customer count badge */
+        .customer-count-badge {
+            background: #f1eefe;
+            padding: 5px 15px;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: #5b21b6;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* review link modern */
+        .review-glow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #fff7e5;
+            padding: 6px 16px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #b45309;
+            transition: 0.2s;
+        }
+
+        .review-glow:hover {
+            background: #fbbf24;
+            color: #2d2a1e;
+        }
+
+        /* date tag */
+        .date-minimal {
+            background: #f2f1f6;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* action icons */
+        .action-cluster {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-circle {
+            width: 34px;
+            height: 34px;
+            border-radius: 12px;
+            background: #f3f0ff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #6a5a9e;
+            transition: 0.2s;
+        }
+
+        .icon-circle.edit {
+            background: #fff4e5;
+            color: #e68a2e;
+        }
+
+        .icon-circle.delete {
+            background: #ffe8e8;
+            color: #dc2626;
+        }
+
+        .icon-circle:hover {
+            transform: translateY(-2px);
+        }
+
+        .empty-state-creative {
+            text-align: center;
+            padding: 55px;
+        }
+
+        .empty-state-creative i {
+            font-size: 4rem;
+            color: #cdc0f0;
+            margin-bottom: 16px;
+        }
+
+        .footer-insight {
+            padding: 16px 28px;
+            background: #fefeff;
+            border-top: 1px solid #ede9fe;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #7b6ca3;
+        }
+
+        @media (max-width: 800px) {
+            body {
+                padding: 20px;
+            }
+            .filter-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="shop-header">
+    <div class="brand-intro">
+        <h1>
+            <i class="fas fa-store"></i>
+            Shopverse Director
+        </h1>
+        <p>
+            <i class="fas fa-chart-line" style="color: #7c3aed;"></i>
+            Manage branches, WhatsApp integration & review performance
+        </p>
+    </div>
+    <div class="header-actions">
+        <div class="stats-glass">
+            <i class="fas fa-shop" style="color: #7c3aed;"></i>
+            <span>Total locations</span>
+            <span class="total-num">{{ shops|length }}</span>
+        </div>
+        <a href="#" class="add-shop-btn">
+            <i class="fas fa-plus-circle"></i> Register shop
+        </a>
+    </div>
+</div>
+
+<div class="shop-directory">
+    <div class="filter-section">
+        <div class="search-shop">
+            <i class="fas fa-search"></i>
+            <input type="text" id="shopSearchInput" placeholder="Search by name, WhatsApp or ID...">
+        </div>
+        <div class="view-toggle" id="viewToggle">
+            <span class="toggle-option active" data-view="all">All shops</span>
+            <span class="toggle-option" data-view="high-customers">High traffic</span>
+        </div>
+    </div>
+
+    <div class="table-studio">
+        <table class="shop-table" id="shopsTable">
+            <thead>
+                <tr>
+                    <th>Shop profile</th>
+                    <th>WhatsApp business</th>
+                    <th>Customer base</th>
+                    <th>Google review link</th>
+                    <th>Registered on</th>
+                    <th>Quick actions</th>
+                </tr>
+            </thead>
+            <tbody id="shopsTableBody">
+                {% for shop in shops %}
+                <tr class="shop-row" 
+                    data-name="{{ shop.name|lower }}" 
+                    data-whatsapp="{{ shop.whatsapp_number }}"
+                    data-customers="{{ shop.customers.count }}">
+                    <td>
+                        <div class="shop-brand">
+                            <div class="shop-icon-badge">
+                                🏬
+                            </div>
+                            <div class="shop-details">
+                                <div class="shop-title">{{ shop.name }}</div>
+                                <div class="shop-id-text">ID: #{{ shop.id }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="wa-modern">
+                            <i class="fab fa-whatsapp"></i> {{ shop.whatsapp_number }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="customer-count-badge">
+                            <i class="fas fa-user-friends"></i> {{ shop.customers.count }} customers
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{{ shop.get_google_review_url }}" target="_blank" class="review-glow">
+                            <i class="fab fa-google"></i> Rate on Google
+                        </a>
+                    </td>
+                    <td>
+                        <div class="date-minimal">
+                            <i class="far fa-calendar-alt"></i> {{ shop.created_at|date:"d M Y" }}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="action-cluster">
+                            <a href="#" class="icon-circle" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="#" class="icon-circle edit" title="Edit Shop">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            <a href="#" class="icon-circle delete" title="Remove">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">
+                        <div class="empty-state-creative">
+                            <i class="fas fa-store-slash"></i>
+                            <p>No shops registered yet</p>
+                            <span>Click "Register shop" to start onboarding</span>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="footer-insight">
+        <span><i class="fas fa-chart-simple"></i> Active locations summary</span>
+        <span><i class="fas fa-sync-alt"></i> Live directory • {% now "F j, Y" %}</span>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const searchInput = document.getElementById('shopSearchInput');
+        const viewOptions = document.querySelectorAll('#viewToggle .toggle-option');
+        const rows = document.querySelectorAll('.shop-row');
+        
+        function filterShops() {
+            const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+            const activeView = document.querySelector('#viewToggle .toggle-option.active')?.getAttribute('data-view') || 'all';
+            
+            rows.forEach(row => {
+                const shopName = row.getAttribute('data-name') || '';
+                const whatsapp = row.getAttribute('data-whatsapp') || '';
+                const customerCount = parseInt(row.getAttribute('data-customers') || '0');
+                
+                const matchesSearch = shopName.includes(searchTerm) || whatsapp.includes(searchTerm);
+                let matchesView = true;
+                if (activeView === 'high-customers') {
+                    matchesView = customerCount > 5;  // threshold for high traffic shops
+                }
+                
+                if (matchesSearch && matchesView) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            
+            // show empty filter message if needed
+            const visibleRows = Array.from(rows).filter(r => r.style.display !== 'none');
+            const tbody = document.getElementById('shopsTableBody');
+            const existingEmptyMsg = tbody.querySelector('.filter-empty-row');
+            if (visibleRows.length === 0 && rows.length > 0) {
+                if (!existingEmptyMsg) {
+                    const emptyMsgRow = document.createElement('tr');
+                    emptyMsgRow.className = 'filter-empty-row';
+                    emptyMsgRow.innerHTML = `<td colspan="6"><div class="empty-state-creative" style="padding: 35px;"><i class="fas fa-filter"></i><p>No shops match your filters</p></div></td>`;
+                    tbody.appendChild(emptyMsgRow);
+                }
+            } else if (existingEmptyMsg) {
+                existingEmptyMsg.remove();
+            }
+        }
+        
+        if (searchInput) {
+            searchInput.addEventListener('input', filterShops);
+        }
+        
+        viewOptions.forEach(opt => {
+            opt.addEventListener('click', function() {
+                viewOptions.forEach(o => o.classList.remove('active'));
+                this.classList.add('active');
+                filterShops();
+            });
+        });
+    })();
+</script>
+</body>
+</html>

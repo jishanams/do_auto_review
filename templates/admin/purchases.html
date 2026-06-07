@@ -1,0 +1,531 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Ledger | Do Auto Review</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at 10% 30%, #f8fafd, #eef2f8);
+            font-family: 'Outfit', sans-serif;
+            padding: 36px 44px;
+            min-height: 100vh;
+        }
+
+        /* floating particles effect */
+        body::before {
+            content: "💰";
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-size: 80px;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* header section */
+        .hero-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .title-block h1 {
+            font-size: 2.6rem;
+            font-weight: 800;
+            background: linear-gradient(145deg, #064e3b, #10b981, #047857);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            letter-spacing: -0.02em;
+        }
+
+        .title-block h1 i {
+            background: linear-gradient(135deg, #10b981, #059669);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 2.2rem;
+        }
+
+        .title-block p {
+            color: #54708f;
+            font-weight: 500;
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stats-ring {
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 80px;
+            padding: 12px 28px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.02);
+            border: 1px solid rgba(16,185,129,0.3);
+        }
+
+        .stats-ring span {
+            font-weight: 500;
+            color: #2c3e5c;
+        }
+
+        .stats-ring .big-number {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #10b981, #047857);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* main card container - premium glass */
+        .purchase-vault {
+            background: rgba(255,255,255,0.97);
+            border-radius: 48px;
+            box-shadow: 0 30px 55px -20px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            backdrop-filter: blur(2px);
+            transition: all 0.2s;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        /* filter bar */
+        .filter-bar {
+            padding: 22px 32px;
+            background: #ffffff;
+            border-bottom: 1px solid #eef3ea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        .search-flex {
+            display: flex;
+            align-items: center;
+            background: #f9fbfd;
+            border-radius: 60px;
+            padding: 8px 22px;
+            gap: 10px;
+            border: 1px solid #e2edf2;
+        }
+
+        .search-flex i {
+            color: #7c9b9f;
+        }
+
+        .search-flex input {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 0.9rem;
+            width: 260px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .date-range {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .date-chip {
+            background: #f1f5f9;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #2c5f2d;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .date-chip.active, .date-chip:hover {
+            background: #10b981;
+            color: white;
+        }
+
+        /* stylish table */
+        .table-orbital {
+            overflow-x: auto;
+        }
+
+        .purchase-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .purchase-table th {
+            padding: 20px 24px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #4f7e6b;
+            background: #fefef9;
+            border-bottom: 1px solid #e6f0ea;
+        }
+
+        .purchase-table td {
+            padding: 18px 24px;
+            border-bottom: 1px solid #f0f6f2;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .purchase-table tr {
+            transition: 0.2s;
+        }
+
+        .purchase-table tr:hover td {
+            background: #f6fef9;
+        }
+
+        /* bill number badge */
+        .bill-glow {
+            background: linear-gradient(115deg, #eef6ff, #e0f2fe);
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: #0369a1;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: monospace;
+        }
+
+        /* customer avatar group */
+        .customer-group {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .circle-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(145deg, #10b981, #0d9488);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: 0 8px 14px -6px rgba(16,185,129,0.3);
+        }
+
+        .customer-detail {
+            font-weight: 700;
+            color: #1f2f40;
+        }
+
+        .customer-detail small {
+            font-weight: 400;
+            font-size: 0.7rem;
+            color: #7086a0;
+            display: block;
+        }
+
+        /* shop tag */
+        .shop-tag {
+            background: #fef9e3;
+            padding: 6px 14px;
+            border-radius: 32px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #b45309;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* amount premium */
+        .amount-premium {
+            font-weight: 800;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, #0a5c2e, #10b981);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* date creative */
+        .date-creative {
+            background: #eef2fc;
+            padding: 5px 14px;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            width: fit-content;
+            color: #2c5a6e;
+        }
+
+        /* action buttons */
+        .action-set {
+            display: flex;
+            gap: 8px;
+        }
+
+        .glass-action {
+            width: 36px;
+            height: 36px;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            text-decoration: none;
+            background: #f3f6fc;
+            color: #4f6f8f;
+        }
+
+        .glass-action.print {
+            background: #fff6e5;
+            color: #e68a2e;
+        }
+
+        .glass-action:hover {
+            transform: translateY(-3px);
+            filter: brightness(0.96);
+        }
+
+        .empty-magic {
+            text-align: center;
+            padding: 60px;
+        }
+
+        .empty-magic i {
+            font-size: 4rem;
+            color: #b9d2c1;
+            margin-bottom: 16px;
+        }
+
+        .footer-note {
+            padding: 16px 32px;
+            background: #fcfefb;
+            border-top: 1px solid #eaf3e6;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #619b7a;
+        }
+
+        @media (max-width: 780px) {
+            body {
+                padding: 20px;
+            }
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="hero-section">
+    <div class="title-block">
+        <h1>
+            <i class="fas fa-receipt"></i> 
+            Purchase Ledger
+        </h1>
+        <p>
+            <i class="fas fa-chart-simple" style="color: #10b981;"></i> 
+            Track transactions, invoices & revenue streams
+        </p>
+    </div>
+    <div class="stats-ring">
+        <i class="fas fa-coins" style="color: #10b981;"></i>
+        <span>Total transactions</span>
+        <span class="big-number">{{ purchases|length }}</span>
+    </div>
+</div>
+
+<div class="purchase-vault">
+    <div class="filter-bar">
+        <div class="search-flex">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchPurchase" placeholder="Search by bill, customer or shop...">
+        </div>
+        <div class="date-range" id="filterDates">
+            <span class="date-chip active" data-period="all">All time</span>
+            <span class="date-chip" data-period="week">This week</span>
+            <span class="date-chip" data-period="month">This month</span>
+            <span class="date-chip" data-period="year">This year</span>
+        </div>
+    </div>
+
+    <div class="table-orbital">
+        <table class="purchase-table" id="purchaseTable">
+            <thead>
+                <tr>
+                    <th>Invoice / Bill</th>
+                    <th>Customer</th>
+                    <th>Shop</th>
+                    <th>Amount</th>
+                    <th>Purchase date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="purchaseTableBody">
+                {% for purchase in purchases %}
+                <tr class="purchase-row" 
+                    data-bill="{{ purchase.bill_number|lower }}" 
+                    data-customer="{{ purchase.customer.name|lower }}" 
+                    data-shop="{{ purchase.shop.name|lower }}"
+                    data-amount="{{ purchase.amount }}"
+                    data-date="{{ purchase.purchase_date|date:'Y-m-d' }}">
+                    <td>
+                        <span class="bill-glow">
+                            <i class="fas fa-hashtag"></i> {{ purchase.bill_number }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="customer-group">
+                            <div class="circle-avatar">
+                                {{ purchase.customer.name|first|upper }}
+                            </div>
+                            <div class="customer-detail">
+                                {{ purchase.customer.name }}
+                                <small>ID: {{ purchase.customer.id }}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="shop-tag">
+                            <i class="fas fa-store"></i> {{ purchase.shop.name }}
+                        </span>
+                    </td>
+                    <td class="amount-premium">
+                        <i class="fas fa-rupee-sign" style="font-size: 0.7rem;"></i> {{ purchase.amount }}
+                    </td>
+                    <td>
+                        <div class="date-creative">
+                            <i class="far fa-calendar-alt"></i> {{ purchase.purchase_date|date:"d M Y" }}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="action-set">
+                            <a href="#" class="glass-action" title="View details">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="#" class="glass-action print" title="Print receipt">
+                                <i class="fas fa-print"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">
+                        <div class="empty-magic">
+                            <i class="fas fa-file-invoice"></i>
+                            <p>No purchase records found</p>
+                            <span style="font-size: 0.75rem;">Start adding transactions to see history</span>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="footer-note">
+        <span><i class="fas fa-chart-line"></i> Financial year summary</span>
+        <span><i class="fas fa-sync-alt"></i> Live ledger • {% now "F j, Y" %}</span>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const searchInput = document.getElementById('searchPurchase');
+        const dateChips = document.querySelectorAll('#filterDates .date-chip');
+        const rows = document.querySelectorAll('.purchase-row');
+        
+        function filterPurchases() {
+            const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+            const activePeriod = document.querySelector('#filterDates .date-chip.active')?.getAttribute('data-period') || 'all';
+            const today = new Date();
+            
+            rows.forEach(row => {
+                const bill = row.getAttribute('data-bill') || '';
+                const customer = row.getAttribute('data-customer') || '';
+                const shop = row.getAttribute('data-shop') || '';
+                const rawDate = row.getAttribute('data-date');
+                
+                let matchesSearch = bill.includes(searchTerm) || customer.includes(searchTerm) || shop.includes(searchTerm);
+                let matchesPeriod = true;
+                
+                if (rawDate && activePeriod !== 'all') {
+                    const rowDate = new Date(rawDate);
+                    const diffDays = Math.floor((today - rowDate) / (1000 * 60 * 60 * 24));
+                    if (activePeriod === 'week') matchesPeriod = diffDays <= 7;
+                    else if (activePeriod === 'month') matchesPeriod = diffDays <= 30;
+                    else if (activePeriod === 'year') matchesPeriod = diffDays <= 365;
+                }
+                
+                if (matchesSearch && matchesPeriod) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            
+            // show empty message if no visible rows
+            const visible = Array.from(rows).filter(r => r.style.display !== 'none');
+            const tbody = document.getElementById('purchaseTableBody');
+            const existingEmptyMsg = tbody.querySelector('.dynamic-empty');
+            if (visible.length === 0 && rows.length > 0) {
+                if (!existingEmptyMsg) {
+                    const emptyRow = document.createElement('tr');
+                    emptyRow.className = 'dynamic-empty';
+                    emptyRow.innerHTML = `<td colspan="6"><div class="empty-magic" style="padding: 40px;"><i class="fas fa-filter"></i><p>No matching purchases</p></div></td>`;
+                    tbody.appendChild(emptyRow);
+                }
+            } else if (existingEmptyMsg) {
+                existingEmptyMsg.remove();
+            }
+        }
+        
+        if (searchInput) {
+            searchInput.addEventListener('input', filterPurchases);
+        }
+        
+        dateChips.forEach(chip => {
+            chip.addEventListener('click', function() {
+                dateChips.forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                filterPurchases();
+            });
+        });
+    })();
+</script>
+</body>
+</html>
